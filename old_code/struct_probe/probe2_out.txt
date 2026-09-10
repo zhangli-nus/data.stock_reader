@@ -1,0 +1,450 @@
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/GJ2/3s/tick_quote_20260902.dat
+  size=15,209,168,896  date=20260902  head16=48e3ef9f755a0600363030333536004c
+  ticker-stride detection: stride=424 (mode 9892/9892 diffs, top5=[(424, 9892)]), first ticker byte offset=8
+  last nonzero byte at 15,209,168,807; trailing zero bytes=88 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=35,870,682  size%itemsize=144
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=35,870,682  size%itemsize=144
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=35,870,682  nrec(if whole file)=35,870,681
+    data_time: first=85031000 last=153201125
+    rdtsc: first=29551749021260600 last=29624016469371776  (2906-06-17 11:10:21.260601 .. 2908-09-30 21:27:49.371777)
+    200k-sample: n=200,000 distinct ticker=26231 examples=['010706', '010713', '018003', '018009', '018012', '018014'] ... ['900946', '900947', '900948'] non6digit=0 []
+    exchange distribution: 1:200000
+    last_price: min=0 max=0 median(>0)=0 zero_frac=1.000
+    qty: min=0 max=0 median(>0)=0 zero_frac=1.000
+    turnover: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    SPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BVol1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    data_time: min=85031000 max=85352826  monotone=False
+    sample rows:
+      [first] ticker=600356 exchange=1 last_price=0.0 qty=0 turnover=0.0 trades_count=4621222390638344929 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=237692 exchange=1 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [last] ticker=245892 exchange=1 last_price=100.152 qty=0 turnover=0.0 trades_count=4636747987403751293 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/GJ2/cbtick/tick_quote_20260902.dat
+  size=6,261,149,696  date=20260902  head16=f860a2c3755a06000300000001000000
+  ticker-stride detection: stride=128 (mode 10410/10433 diffs, top5=[(128, 10410), (256, 23)]), first ticker byte offset=2855840
+  last nonzero byte at 6,261,149,595; trailing zero bytes=100 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=0.750 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=48,915,232  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=48,915,232  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=48,915,232  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=48,915,232  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=48,915,232  size%itemsize=0
+   score=0.500 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=48,915,232  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=48,915,232  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=48,915,232  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=48,915,232  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote itemsize=128 nrec=48,915,232  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_trade_all_utc offset=0 itemsize=128 nrec(true)=48,915,232  nrec(if whole file)=48,915,232
+    ReceiveTime: first=1788311700136184 last=1788334200342501  (2026-09-02 09:15:00.136184 .. 2026-09-02 15:30:00.342501)
+    int_time: first=0 last=0
+    rdtsc: first=0 last=0
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=417 examples=['', '018003', '018009', '018012', '018014', '018015'] ... ['244588', '270099', '271120'] non6digit=1 ['']
+    data_type distribution: 1:116410, 2:39180, 3:44410
+    exchange distribution: 1:200000
+    trade_flag distribution: b'':44410, b'1':17140, b'2':99270, b'B':4271, b'N':34581, b'S':328
+    seq strictly increasing within channel (200k sample): True
+    channels: {801: 200000}
+    price: min=0 max=3.76478e-317 median(>0)=2.1147e-319 zero_frac=0.222
+    qty: min=0 max=1.34491e+08 median(>0)=26000 zero_frac=0.222
+    int_time: min=0 max=93000069  monotone=False
+    sample rows:
+      [first] ReceiveTime=1788311700136184 data_type=3 exchange=1 channel_no=801 seq=1 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+      [mid] ReceiveTime=1788312302399074 data_type=1 exchange=1 channel_no=801 seq=100001 ticker=019834 int_time=91500073 trade_flag=2 price=0.0 qty=1034860 bid_no=1000000 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=29557960636554955
+      [last] ReceiveTime=1788334200342501 data_type=3 exchange=1 channel_no=801 seq=48915232 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/GJ2/tick/tick_quote_20260902.dat
+  size=25,794,899,968  date=20260902  head16=542d0ec0755a06000300000001000000
+  ticker-stride detection: stride=128 (mode 28761/28804 diffs, top5=[(128, 28761), (256, 43)]), first ticker byte offset=501792
+  last nonzero byte at 25,794,899,867; trailing zero bytes=100 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=0.750 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=201,522,656  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=201,522,656  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=201,522,656  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=201,522,656  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=201,522,656  size%itemsize=0
+   score=0.500 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=201,522,656  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=201,522,656  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=201,522,656  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=201,522,656  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote itemsize=128 nrec=201,522,656  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_trade_all_utc offset=0 itemsize=128 nrec(true)=201,522,656  nrec(if whole file)=201,522,656
+    ReceiveTime: first=1788311640091988 last=1788332701165453  (2026-09-02 09:14:00.091988 .. 2026-09-02 15:05:01.165453)
+    int_time: first=0 last=0
+    rdtsc: first=0 last=0
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=93 examples=['', '511990', '512400', '513010', '515080', '518880'] ... ['900946', '900947', '900948'] non6digit=1 ['']
+    data_type distribution: 1:159006, 2:36987, 3:4007
+    exchange distribution: 1:200000
+    trade_flag distribution: b'':4007, b'1':79068, b'2':79938, b'N':36987
+    seq strictly increasing within channel (200k sample): True
+    channels: {1: 54353, 2: 54819, 3: 9942, 4: 35530, 5: 16475, 6: 25212, 20: 3669}
+    price: min=0 max=6.37592e-318 median(>0)=1.13596e-318 zero_frac=0.020
+    qty: min=0 max=1e+09 median(>0)=260000 zero_frac=0.020
+    int_time: min=0 max=92500230  monotone=False
+    sample rows:
+      [first] ReceiveTime=1788311640091988 data_type=3 exchange=1 channel_no=1 seq=1 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+      [mid] ReceiveTime=1788312300849243 data_type=2 exchange=1 channel_no=6 seq=16938 ticker=518880 int_time=92500000 trade_flag=N price=0.0 qty=1400000 bid_no=90387 ask_no=17328 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=29557956022466713
+      [last] ReceiveTime=1788332701165453 data_type=3 exchange=1 channel_no=3 seq=34361882 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/GJ2/3s/tick_quote_20260902.dat
+  size=7,218,802,688  date=20260902  head16=8fc4f49f755a0600353633303032004c
+  ticker-stride detection: stride=424 (mode 9892/9892 diffs, top5=[(424, 9892)]), first ticker byte offset=8
+  last nonzero byte at 7,218,802,687; trailing zero bytes=0 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=17,025,479  size%itemsize=8
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=17,025,479  size%itemsize=8
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=17,025,479  nrec(if whole file)=17,025,478
+    data_time: first=84721000 last=151200000
+    rdtsc: first=83889488641505298 last=83958176786173881  (4628-05-09 11:44:01.505295 .. 4630-07-13 11:46:26.173889)
+    200k-sample: n=200,000 distinct ticker=23764 examples=['000001', '000002', '000006', '000007', '000008', '000009'] ... ['567249', '567250', '567251'] non6digit=0 []
+    exchange distribution: 2:200000
+    last_price: min=0 max=877.9 median(>0)=100 zero_frac=0.882
+    qty: min=0 max=0 median(>0)=0 zero_frac=1.000
+    turnover: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    SPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BVol1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    data_time: min=81649000 max=91221000  monotone=False
+    sample rows:
+      [first] ticker=563002 exchange=2 last_price=100.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=106168 exchange=2 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [last] ticker=195084 exchange=2 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/GJ2/tick/tick_quote_20260902.dat
+  size=35,376,074,752  date=20260902  head16=f9cda0c3755a06000100000002000000
+  ticker-stride detection: stride=128 (mode 32767/32767 diffs, top5=[(128, 32767)]), first ticker byte offset=32
+  last nonzero byte at 35,376,074,751; trailing zero bytes=0 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=1.000 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=276,375,584  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=276,375,584  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=276,375,584  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=276,375,584  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=276,375,584  size%itemsize=0
+   score=1.000 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=276,375,584  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=276,375,584  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=276,375,584  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=276,375,584  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote itemsize=128 nrec=276,375,584  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_entrust_all_utc offset=0 itemsize=128 nrec(true)=276,375,584  nrec(if whole file)=276,375,584
+    ReceiveTime: first=1788311700033017 last=1788333121457719  (2026-09-02 09:15:00.033017 .. 2026-09-02 15:12:01.457719)
+    int_time: first=91500000 last=151201450
+    rdtsc: first=83893912743234989 last=83958176540767375  (4628-06-29 16:39:03.234985 .. 4630-07-13 11:42:20.767380)
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=3995 examples=['000001', '000002', '000006', '000007', '000008', '000009'] ... ['524520', '524548', '524598'] non6digit=0 []
+    data_type distribution: 1:200000
+    exchange distribution: 2:200000
+    side distribution: b'1':70846, b'2':129154
+    ord_type distribution: b'2':199479, b'C':521
+    seq strictly increasing within channel (200k sample): True
+    channels: {2011: 36688, 2012: 38752, 2013: 32892, 2014: 34529, 2015: 36276, 2021: 3761, 2022: 3627, 2023: 3701, 2024: 2587, 2025: 3781, 2031: 512, 2032: 330, 2033: 574, 2034: 465, 2035: 1371, 2061: 139, 2071: 15}
+    price: min=0 max=1.03116e+07 median(>0)=96000 zero_frac=0.003
+    qty: min=100 max=1e+08 median(>0)=80000 zero_frac=0.000
+    int_time: min=91500000 max=91500800  monotone=False
+    sample rows:
+      [first] ReceiveTime=1788311700033017 data_type=1 exchange=2 channel_no=2014 seq=1 ticker=002269 int_time=91500000 side=1 ord_type=2 order_no=1 price=14800 qty=38990000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=83893912743234989
+      [mid] ReceiveTime=1788311700621888 data_type=1 exchange=2 channel_no=2011 seq=18850 ticker=000725 int_time=91500040 side=2 ord_type=2 order_no=18850 price=64800 qty=60000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=83893914509851774
+      [last] ReceiveTime=1788333121457719 data_type=2 exchange=2 channel_no=2061 seq=1626218 ticker=131810 int_time=151201450 side= ord_type= order_no=14350 price=706000 qty=1625208 r1=1626217 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=83958176540767375
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/DZ/3s/tick_quote_20260429.dat
+  size=6,687,399,936  date=20260429  head16=4233f1ef8e5006003135393134300000
+  ticker-stride detection: stride=424 (mode 9892/9892 diffs, top5=[(424, 9892)]), first ticker byte offset=8
+  last nonzero byte at 6,687,399,929; trailing zero bytes=6 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=15,772,170  size%itemsize=272
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=15,772,170  size%itemsize=272
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=15,772,170  nrec(if whole file)=15,772,169
+    data_time: first=85506000 last=160000000
+    rdtsc: first=330391961797488385 last=330468446227813893  (? .. ?)
+    200k-sample: n=200,000 distinct ticker=4068 examples=['000001', '000002', '000004', '000006', '000007', '000008'] ... ['301687', '301696', '302132'] non6digit=0 []
+    exchange distribution: 0:200000
+    last_price: min=0 max=0 median(>0)=0 zero_frac=1.000
+    qty: min=0 max=0 median(>0)=0 zero_frac=1.000
+    turnover: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BPrice1: min=0 max=870 median(>0)=14.52 zero_frac=0.441
+    SPrice1: min=0 max=870 median(>0)=14.52 zero_frac=0.441
+    BVol1: min=0 max=2.81857e+07 median(>0)=29500 zero_frac=0.441
+    data_time: min=85506000 max=92430000  monotone=True
+    sample rows:
+      [first] ticker=159140 exchange=0 last_price=0.0 qty=0 turnover=0.0 trades_count=4608195728716175770 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=123118 exchange=0 last_price=0.0 qty=0 turnover=0.0 trades_count=4647925921678884864 BPrice1=542.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=542.0 SPrice2=0.0
+      [last] ticker=301141 exchange=0 last_price=52.9 qty=4826376 turnover=254126867.53 trades_count=4632225247477964472 BPrice1=52.9 BPrice2=52.89 BPrice3=52.88 BPrice4=52.86 BPrice5=52.84 BPrice6=52.83 BPrice7=52.81 BPrice8=52.8 BPrice9=52.79 BPrice10=52.78 SPrice1=52.91 SPrice2=52.92
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/DZ/tick/tick_quote_20260429.dat
+  size=40,843,886,592  date=20260429  head16=f47e9f138f5006000100000002000000
+  ticker-stride detection: stride=128 (mode 32767/32767 diffs, top5=[(128, 32767)]), first ticker byte offset=32
+  last nonzero byte at 40,843,886,591; trailing zero bytes=0 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=1.000 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=319,092,864  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=319,092,864  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=319,092,864  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=319,092,864  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=319,092,864  size%itemsize=0
+   score=1.000 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=319,092,864  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=319,092,864  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=319,092,864  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=319,092,864  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote itemsize=128 nrec=319,092,864  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_entrust_all_utc offset=0 itemsize=128 nrec(true)=319,092,864  nrec(if whole file)=319,092,864
+    ReceiveTime: first=1777425300029172 last=1777447799663210  (2026-04-29 09:15:00.029172 .. 2026-04-29 15:29:59.663210)
+    int_time: first=20260429091500000 last=20260429152959650  (2612-01-12 00:58:11.500000 .. 2612-01-12 00:59:12.959648)
+    rdtsc: first=330395541629427885 last=330463040648043159  (? .. ?)
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=3920 examples=['000001', '000002', '000006', '000007', '000008', '000009'] ... ['301687', '301696', '302132'] non6digit=0 []
+    data_type distribution: 1:200000
+    exchange distribution: 2:200000
+    side distribution: b'1':60059, b'2':139941
+    ord_type distribution: b'2':199593, b'C':407
+    seq strictly increasing within channel (200k sample): True
+    channels: {2011: 36679, 2012: 36408, 2013: 38841, 2014: 35998, 2015: 31917, 2021: 4524, 2022: 3480, 2023: 3540, 2024: 2423, 2025: 3598, 2031: 568, 2032: 595, 2033: 379, 2034: 416, 2035: 495, 2061: 139}
+    price: min=0 max=9.9e+06 median(>0)=117000 zero_frac=0.002
+    qty: min=100 max=1e+08 median(>0)=80000 zero_frac=0.000
+    int_time: min=20260429091500000 max=20260429091500130  monotone=False
+    sample rows:
+      [first] ReceiveTime=1777425300029172 data_type=1 exchange=2 channel_no=2013 seq=1 ticker=002582 int_time=20260429091500000 side=1 ord_type=2 order_no=1 price=138400 qty=39820000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=330395541629427885
+      [mid] ReceiveTime=1777425300624841 data_type=1 exchange=2 channel_no=2013 seq=20127 ticker=002962 int_time=20260429091500070 side=2 ord_type=2 order_no=20127 price=169600 qty=60000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=330395543416439540
+      [last] ReceiveTime=1777447799663210 data_type=1 exchange=2 channel_no=2061 seq=2393181 ticker=131810 int_time=20260429152959650 side=2 ord_type=2 order_no=2393181 price=2450 qty=2000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=330463040648043159
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/DZ/index/tick_quote_20260429.dat
+  size=430,366,720  date=20260429  head16=7102f1ef8e5006007a4085a5bdc99504
+  ticker-stride detection: stride=128 (mode 32767/32767 diffs, top5=[(128, 32767)]), first ticker byte offset=16
+  last nonzero byte at 430,366,719; trailing zero bytes=0 (0.00% of file)
+  !! NO dtype in dtype.py matches stride/ticker-offset. raw first record hex:
+    7102f1ef8e5006007a4085a5bdc9950433393930313200000065d079a3bec0fa0200000000000000d079a3bec0fa47003f355eba0985b34000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007000000000000000058d85a5bdc99504
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/DZ/3s/tick_quote_20260429.dat
+  size=12,864,929,792  date=20260429  head16=00c6f0ef8e5006003630303137300000
+  ticker-stride detection: stride=424 (mode 9892/9892 diffs, top5=[(424, 9892)]), first ticker byte offset=8
+  last nonzero byte at 12,864,929,784; trailing zero bytes=7 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=30,341,816  size%itemsize=224
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=30,341,816  size%itemsize=224
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=30,341,816  nrec(if whole file)=30,341,815
+    data_time: first=85002000 last=143058706
+    rdtsc: first=5364091474995455 last=5425461329570145  (2139-12-25 17:24:34.995455 .. 2141-12-05 00:35:29.570145)
+    200k-sample: n=200,000 distinct ticker=25347 examples=['010609', '010706', '010713', '018003', '018009', '018012'] ... ['900946', '900947', '900948'] non6digit=0 []
+    exchange distribution: 0:200000
+    last_price: min=0 max=0 median(>0)=0 zero_frac=1.000
+    qty: min=0 max=0 median(>0)=0 zero_frac=1.000
+    turnover: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    SPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BVol1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    data_time: min=85002000 max=85359007  monotone=False
+    sample rows:
+      [first] ticker=600170 exchange=0 last_price=0.0 qty=0 turnover=0.0 trades_count=4613149688306283315 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=173993 exchange=0 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [last] ticker=111012 exchange=0 last_price=386.175 qty=513450 turnover=196244402.61 trades_count=4645293092707663610 BPrice1=386.013 BPrice2=386.011 BPrice3=386.001 BPrice4=386.0 BPrice5=385.918 BPrice6=385.917 BPrice7=385.871 BPrice8=385.8 BPrice9=385.735 BPrice10=385.646 SPrice1=386.171 SPrice2=386.175
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/DZ/cbtick/tick_quote_20260429.dat
+  size=773,152,768  date=20260429  head16=ed40a1138f5006000300000001000000
+  ticker-stride detection: stride=128 (mode 11203/11229 diffs, top5=[(128, 11203), (256, 26)]), first ticker byte offset=2753568
+  last nonzero byte at 773,152,766; trailing zero bytes=1 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=0.875 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=6,040,256  size%itemsize=0
+   score=0.833 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=6,040,256  size%itemsize=0
+   score=0.833 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=6,040,256  size%itemsize=0
+   score=0.833 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=6,040,256  size%itemsize=0
+   score=0.833 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=6,040,256  size%itemsize=0
+   score=0.750 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=6,040,256  size%itemsize=120
+   score=0.750 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=6,040,256  size%itemsize=120
+   score=0.750 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=6,040,256  size%itemsize=120
+   score=0.750 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=6,040,256  size%itemsize=120
+   score=0.750 off=8 dtype=dz_tick_quote itemsize=128 nrec=6,040,256  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_trade_all_utc offset=0 itemsize=128 nrec(true)=6,040,256  nrec(if whole file)=6,040,256
+    ReceiveTime: first=1777425300144365 last=1777427044060056  (2026-04-29 09:15:00.144365 .. 2026-04-29 09:44:04.060056)
+    int_time: first=0 last=94402230
+    rdtsc: first=0 last=5373812100649570
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=447 examples=['', '010609', '018003', '018009', '018012', '018014'] ... ['244748', '270099', '271113'] non6digit=1 ['']
+    data_type distribution: 1:129214, 2:27978, 3:42808
+    exchange distribution: 1:200000
+    trade_flag distribution: b'':70629, b'1':18207, b'2':111007, b'N':157
+    seq strictly increasing within channel (200k sample): True
+    channels: {801: 200000}
+    price: min=0 max=2.92487e-317 median(>0)=2.81855e-319 zero_frac=0.214
+    qty: min=0 max=2.44427e+08 median(>0)=14300 zero_frac=0.214
+    int_time: min=0 max=93000294  monotone=False
+    sample rows:
+      [first] ReceiveTime=1777425300144365 data_type=3 exchange=1 channel_no=801 seq=1 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+      [mid] ReceiveTime=1777425903241377 data_type=1 exchange=1 channel_no=801 seq=100001 ticker=204001 int_time=91500183 trade_flag=2 price=0.0 qty=13900 bid_no=193000 ask_no=0 ori_seq=4294967296 biz_idx=0 ori_no_idx=0 rdtsc=5370392128896852
+      [last] ReceiveTime=1777427044060056 data_type=2 exchange=1 channel_no=801 seq=6040256 ticker=118041 int_time=94402230 trade_flag= price=0.0 qty=3000 bid_no=4962909 ask_no=4963228 ori_seq=4294967296 biz_idx=0 ori_no_idx=0 rdtsc=5373812100649570
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/DZ/stocktick/tick_quote_20251210.dat
+  size=20,125,474,816  date=20251210  head16=df2145be8e4506000300000001000000
+  ticker-stride detection: stride=128 (mode 29022/29037 diffs, top5=[(128, 29022), (256, 15)]), first ticker byte offset=475552
+  last nonzero byte at 20,125,474,715; trailing zero bytes=100 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=0.750 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=157,230,272  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=157,230,272  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=157,230,272  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=157,230,272  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=157,230,272  size%itemsize=0
+   score=0.500 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=157,230,272  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=157,230,272  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=157,230,272  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=157,230,272  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote itemsize=128 nrec=157,230,272  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_trade_all_utc offset=0 itemsize=128 nrec(true)=157,230,272  nrec(if whole file)=157,230,272
+    ReceiveTime: first=1765329240138207 last=1765350300706052  (2025-12-10 09:14:00.138207 .. 2025-12-10 15:05:00.706052)
+    int_time: first=0 last=0
+    rdtsc: first=0 last=0
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=71 examples=['', '511380', '513750', '515290', '520830', '562050'] ... ['688602', '688795', '688796'] non6digit=1 ['']
+    data_type distribution: 1:164689, 2:31530, 3:3781
+    exchange distribution: 1:200000
+    trade_flag distribution: b'':35311, b'1':70528, b'2':94161
+    seq strictly increasing within channel (200k sample): True
+    channels: {1: 13991, 2: 54931, 3: 35334, 4: 72169, 5: 22919, 6: 656}
+    price: min=0 max=3.0636e-317 median(>0)=8.77461e-319 zero_frac=0.019
+    qty: min=0 max=4.17e+08 median(>0)=133800 zero_frac=0.019
+    int_time: min=0 max=9250020  monotone=False
+    sample rows:
+      [first] ReceiveTime=1765329240138207 data_type=3 exchange=1 channel_no=1 seq=1 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+      [mid] ReceiveTime=1765329901780112 data_type=1 exchange=1 channel_no=3 seq=19135 ticker=600219 int_time=9152015 trade_flag=2 price=0.0 qty=51100 bid_no=2000000 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=55430483997816961
+      [last] ReceiveTime=1765350300706052 data_type=3 exchange=1 channel_no=6 seq=26967183 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/GJ/3s/tick_quote_20251117.dat
+  size=19,100,798,976  date=20251117  head16=a417ceefbf430600313630333532004c
+  ticker-stride detection: stride=424 (mode 9892/9892 diffs, top5=[(424, 9892)]), first ticker byte offset=8
+  last nonzero byte at 19,100,798,975; trailing zero bytes=0 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=45,049,055  size%itemsize=72
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=45,049,055  size%itemsize=72
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=45,049,055  nrec(if whole file)=45,049,054
+    data_time: first=84943527 last=153001000
+    rdtsc: first=162173310490415808 last=162245273980747056  (7109-01-26 05:48:10.415802 .. 7111-05-09 03:39:40.747070)
+    200k-sample: n=200,000 distinct ticker=24387 examples=['010609', '010706', '010713', '018003', '018009', '018012'] ... ['900946', '900947', '900948'] non6digit=0 []
+    exchange distribution: 1:200000
+    last_price: min=0 max=0 median(>0)=0 zero_frac=1.000
+    qty: min=0 max=0 median(>0)=0 zero_frac=1.000
+    turnover: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    SPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BVol1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    data_time: min=84943000 max=85239420  monotone=False
+    sample rows:
+      [first] ticker=160352 exchange=1 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=234862 exchange=1 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [last] ticker=588760 exchange=1 last_price=0.71 qty=2446696920 turnover=173581104.0 trades_count=4604543309418378297 BPrice1=0.71 BPrice2=0.709 BPrice3=0.708 BPrice4=0.707 BPrice5=0.706 BPrice6=0.705 BPrice7=0.704 BPrice8=0.703 BPrice9=0.702 BPrice10=0.701 SPrice1=0.711 SPrice2=0.712
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/HX/3s/tick_quote_20260114.dat
+  size=12,884,897,792  date=20260114  head16=049898b24e4806003538393138300000
+  ticker-stride detection: stride=424 (mode 9891/9893 diffs, top5=[(424, 9891), (48, 1), (376, 1)]), first ticker byte offset=8
+  last nonzero byte at 12,884,897,784; trailing zero bytes=7 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=30,388,910  size%itemsize=368
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=30,388,910  size%itemsize=368
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=30,388,910  nrec(if whole file)=30,388,909
+    data_time: first=85007000 last=153028000
+    rdtsc: first=202613410237037875 last=202685473646169256  (8390-07-25 22:50:37.037903 .. 8392-11-06 00:27:26.169250)
+    200k-sample: n=200,000 distinct ticker=18892 examples=['010609', '010706', '010713', '018003', '018009', '018012'] ... ['900946', '900947', '900948'] non6digit=0 []
+    exchange distribution: 0:200000
+    last_price: min=0 max=0 median(>0)=0 zero_frac=1.000
+    qty: min=0 max=0 median(>0)=0 zero_frac=1.000
+    turnover: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    SPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BVol1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    data_time: min=85007000 max=85504215  monotone=False
+    sample rows:
+      [first] ticker=589180 exchange=0 last_price=0.0 qty=0 turnover=0.0 trades_count=4609830535380911260 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=160482 exchange=0 last_price=0.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [last] ticker=510370 exchange=0 last_price=1.055 qty=2629800 turnover=2801429.2 trades_count=4607430116779522785 BPrice1=1.055 BPrice2=1.054 BPrice3=1.051 BPrice4=1.05 BPrice5=1.049 BPrice6=1.048 BPrice7=1.045 BPrice8=1.041 BPrice9=1.04 BPrice10=1.028 SPrice1=1.065 SPrice2=1.066
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SSE/HX/tick/tick_quote_20260114.dat
+  size=39,258,341,376  date=20260114  head16=cb36bad24e4806000300000001000000
+  ticker-stride detection: stride=128 (mode 7851/7877 diffs, top5=[(128, 7851), (256, 26)]), first ticker byte offset=3182624
+  last nonzero byte at 39,258,341,275; trailing zero bytes=100 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=0.750 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=306,705,792  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=306,705,792  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=306,705,792  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=306,705,792  size%itemsize=0
+   score=0.667 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=306,705,792  size%itemsize=0
+   score=0.500 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=306,705,792  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=306,705,792  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=306,705,792  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=306,705,792  size%itemsize=120
+   score=0.500 off=8 dtype=dz_tick_quote itemsize=128 nrec=306,705,792  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_trade_all_utc offset=0 itemsize=128 nrec(true)=306,705,792  nrec(if whole file)=306,705,792
+    ReceiveTime: first=1768353240331979 last=1768376100362159  (2026-01-14 09:14:00.331979 .. 2026-01-14 15:35:00.362159)
+    int_time: first=0 last=0
+    rdtsc: first=0 last=0
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=199 examples=['', '110067', '110070', '110073', '110074', '110075'] ... ['601992', '688306', '688376'] non6digit=1 ['']
+    data_type distribution: 1:159243, 2:15700, 3:25057
+    exchange distribution: 1:200000
+    trade_flag distribution: b'':40757, b'1':87772, b'2':71471
+    seq strictly increasing within channel (200k sample): True
+    channels: {1: 24634, 2: 51490, 3: 43073, 4: 4254, 5: 654, 6: 654, 20: 41, 801: 75200}
+    price: min=0 max=4.10074e-317 median(>0)=8.42654e-319 zero_frac=0.125
+    qty: min=0 max=8.672e+08 median(>0)=436400 zero_frac=0.167
+    int_time: min=0 max=92500040  monotone=False
+    sample rows:
+      [first] ReceiveTime=1768353240331979 data_type=3 exchange=1 channel_no=1 seq=1 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+      [mid] ReceiveTime=1768353900839116 data_type=1 exchange=1 channel_no=2 seq=22919 ticker=601992 int_time=92229410 trade_flag=1 price=0.0 qty=21300 bid_no=300000 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=202619690438763955
+      [last] ReceiveTime=1768376100362159 data_type=3 exchange=1 channel_no=801 seq=66100617 ticker= int_time=0 trade_flag= price=0.0 qty=0 bid_no=0 ask_no=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/GJ/3s/tick_quote_20260114.dat
+  size=7,613,530,112  date=20260114  head16=433b98b24e480600353633303032004c
+  ticker-stride detection: stride=424 (mode 9892/9892 diffs, top5=[(424, 9892)]), first ticker byte offset=8
+  last nonzero byte at 7,613,530,099; trailing zero bytes=12 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 2
+   score=1.000 off=8 dtype=dz_myob_quote itemsize=424 nrec=17,956,439  size%itemsize=392
+   score=1.000 off=8 dtype=my_new_ob_t itemsize=424 nrec=17,956,439  size%itemsize=392
+  --> BEST: dtype=dz_myob_quote offset=8 itemsize=424 nrec(true)=17,956,439  nrec(if whole file)=17,956,438
+    data_time: first=84730000 last=153000000
+    rdtsc: first=127742691960668355 last=127819156622197138  (6018-01-02 17:06:00.668350 .. 6020-06-05 17:17:02.197144)
+    200k-sample: n=200,000 distinct ticker=21944 examples=['000001', '000002', '000004', '000006', '000007', '000008'] ... ['565829', '565830', '565831'] non6digit=0 []
+    exchange distribution: 2:200000
+    last_price: min=0 max=1134 median(>0)=100 zero_frac=0.891
+    qty: min=0 max=570000 median(>0)=160000 zero_frac=1.000
+    turnover: min=0 max=5.81935e+07 median(>0)=1.62033e+07 zero_frac=1.000
+    BPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    SPrice1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    BVol1: min=0 max=0 median(>0)=0 zero_frac=1.000
+    data_time: min=81646000 max=91342000  monotone=False
+    sample rows:
+      [first] ticker=563002 exchange=2 last_price=100.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [mid] ticker=144341 exchange=2 last_price=0.0 qty=0 turnover=0.0 trades_count=4633111893654603039 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+      [last] ticker=191615 exchange=2 last_price=100.0 qty=0 turnover=0.0 trades_count=4636737291354636288 BPrice1=0.0 BPrice2=0.0 BPrice3=0.0 BPrice4=0.0 BPrice5=0.0 BPrice6=0.0 BPrice7=0.0 BPrice8=0.0 BPrice9=0.0 BPrice10=0.0 SPrice1=0.0 SPrice2=0.0
+==============================================================================================================
+FILE /mnt/data_center/New_Raw/SZSE/GJ/tick/tick_quote_20251013.dat
+  size=37,819,564,032  date=20251013  head16=db2c0bffff4006000100000002000000
+  ticker-stride detection: stride=128 (mode 32767/32767 diffs, top5=[(128, 32767)]), first ticker byte offset=32
+  last nonzero byte at 37,819,564,031; trailing zero bytes=0 (0.00% of file)
+  structural candidates (itemsize==stride & symbol offset match): 10
+   score=1.000 off=0 dtype=dz_tick_quote_entrust_all_utc itemsize=128 nrec=295,465,344  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_entrust_all_ext_utc itemsize=128 nrec=295,465,344  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_trade_all_utc itemsize=128 nrec=295,465,344  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_trade_all_ext_utc itemsize=128 nrec=295,465,344  size%itemsize=0
+   score=1.000 off=0 dtype=dz_tick_quote_utc itemsize=128 nrec=295,465,344  size%itemsize=0
+   score=1.000 off=8 dtype=dz_tick_sse_quote_entrust_all itemsize=128 nrec=295,465,344  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_sse_quote_trade_all itemsize=128 nrec=295,465,344  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote_entrust_all itemsize=128 nrec=295,465,344  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote_trade_all itemsize=128 nrec=295,465,344  size%itemsize=120
+   score=1.000 off=8 dtype=dz_tick_quote itemsize=128 nrec=295,465,344  size%itemsize=120
+  --> BEST: dtype=dz_tick_quote_entrust_all_utc offset=0 itemsize=128 nrec(true)=295,465,344  nrec(if whole file)=295,465,344
+    ReceiveTime: first=1760318100024539 last=1760340599569667  (2025-10-13 09:15:00.024539 .. 2025-10-13 15:29:59.569667)
+    int_time: first=91500000 last=152959560
+    rdtsc: first=102137890674878342 last=102209600525082771  (5206-08-15 20:17:54.878342 .. 5208-11-22 19:42:05.082764)
+    ReceiveTime monotone(head,tail): True True
+    200k-sample: n=200,000 distinct ticker=3890 examples=['000001', '000002', '000004', '000006', '000007', '000008'] ... ['301668', '301678', '302132'] non6digit=0 []
+    data_type distribution: 1:200000
+    exchange distribution: 2:200000
+    side distribution: b'1':65186, b'2':134814
+    ord_type distribution: b'2':199582, b'C':418
+    seq strictly increasing within channel (200k sample): True
+    channels: {2011: 34872, 2012: 34422, 2013: 37039, 2014: 34269, 2015: 33285, 2021: 5814, 2022: 3855, 2023: 5485, 2024: 4430, 2025: 3080, 2031: 547, 2032: 866, 2033: 723, 2034: 603, 2035: 560, 2061: 139, 2071: 11}
+    price: min=0 max=1.588e+07 median(>0)=111100 zero_frac=0.002
+    qty: min=100 max=1e+08 median(>0)=80000 zero_frac=0.000
+    int_time: min=91500000 max=91500680  monotone=False
+    sample rows:
+      [first] ReceiveTime=1760318100024539 data_type=1 exchange=2 channel_no=2014 seq=1 ticker=002602 int_time=91500000 side=2 ord_type=2 order_no=1 price=191000 qty=31060000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=102137890674878342
+      [mid] ReceiveTime=1760318100622841 data_type=1 exchange=2 channel_no=2023 seq=2418 ticker=159633 int_time=91500100 side=2 ord_type=2 order_no=2418 price=31580 qty=10000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=102137892566807034
+      [last] ReceiveTime=1760340599569667 data_type=1 exchange=2 channel_no=2061 seq=2119181 ticker=131810 int_time=152959560 side=2 ord_type=2 order_no=2119181 price=9000 qty=158000 r1=0 ori_seq=0 biz_idx=0 ori_no_idx=0 rdtsc=102209600525082771

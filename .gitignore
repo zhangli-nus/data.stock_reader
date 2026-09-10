@@ -1,0 +1,45 @@
+# OS files
+.DS_Store
+
+# IDE related
+.idea/
+.vs/
+.vscode/
+.arcconfig
+.project
+*.VC.*
+*.sln
+*.vcxproj*
+*.flow
+*.log
+
+# Node related
+node_modules/
+
+# Python related
+__pycache__/
+__pypackages__/
+.pdm.toml
+*.pyc
+*.egg-info/
+*.egg
+
+# Kungfu related
+__kungfulibs__/
+
+# Build related
+build/
+build-*/
+cmake-build-debug/
+dist/
+
+# assemble demo result
+*.csv
+
+/data/
+.codex_tmp/
+/model/
+.agents/
+skills/
+doc/
+.workbuddy/
