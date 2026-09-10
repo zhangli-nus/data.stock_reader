@@ -149,15 +149,13 @@ class CNIndexL2:
             g = self._decode(src, stem, date)
             frames.append(g)
         #
+        df = pd.concat(frames, ignore_index=True)
+        symbols = df.groupby('symbol', sort=False).size().rename('day_records').reset_index()
         if write_together:                             # 全天一张表
-            df = pd.concat(frames, ignore_index=True)
-            df.to_feather(join_path(out_dir, f'{date}.feather'))
-            symbols = df.groupby('symbol', sort=False).size().rename('day_records').reset_index()
-        else:                                          # 逐指数落盘
-            df = pd.concat(frames, ignore_index=True)
-            symbols = df.groupby('symbol', sort=False).size().rename('day_records').reset_index()
-            for symbol, g in df.groupby('symbol', sort=False):
-                g.reset_index(drop=True).to_feather(join_path(out_dir, f'{symbol}.feather'))
+            df.to_feather(join_path(out_dir, f'{date}.feather'), compression='zstd')
+        else:
+            for symbol, g in df.groupby('symbol', sort=False): # 逐指数落盘
+                g.reset_index(drop=True).to_feather(join_path(out_dir, f'{symbol}.feather'), compression='zstd')
         symbols.to_csv(join_path(out_dir, f'{date}_INDEX.csv'), index=False)
         print(f'INDEX {date}: {len(symbols)} symbols, {symbols["day_records"].sum()} records -> {out_dir}', flush=True)
 
