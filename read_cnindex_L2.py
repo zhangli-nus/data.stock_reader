@@ -3,9 +3,9 @@
 r"""
 read_cnindex_L2.py — SSE/SZSE 指数快照 (INDEX) 解析器
 
-数据布局 (沪深指数同目录, 一个指数一个 parquet, 一天一目录, 2022~2026 共 1127 个交易日):
-  INDEX_ROOT\<date>\sh000001.parquet   上证指数 (sh* = SSE, ~200 个/天)
-  INDEX_ROOT\<date>\sz399001.parquet   深证成指 (sz* = SZSE, ~354 个/天)
+数据布局 (输入: 日期目录, 沪深指数同目录, 一个指数一个 parquet, 2022~2026 共 1127 个交易日):
+  SRC_ROOT\<date>\sh000001.parquet   上证指数 (sh* = SSE, ~200 个/天)
+  SRC_ROOT\<date>\sz399001.parquet   深证成指 (sz* = SZSE, ~354 个/天)
 
 源是老二进制 INDEX 128B (沪深混流) 转出的 parquet (16 列), 时间口径已实测:
   ReceiveTime = 落地时间 epoch 微秒 UTC, 文件内单调不减;
@@ -15,17 +15,17 @@ read_cnindex_L2.py — SSE/SZSE 指数快照 (INDEX) 解析器
 用法:
   全量运行: run_exp/run_read_cnindex.py (逐天解析全部日期, 以 csv 完成标记断点续跑)
   单天冒烟: python read_cnindex_L2.py (内置 _test, 跑 20260428 两种落盘模式)
-  或 import (index_root/md_root 必传, 不在库内硬编码路径):
+  或 import (src_root/out_root 必传, 不在库内硬编码路径):
   from read_cnindex_L2 import CNIndexL2
-  r = CNIndexL2(index_root=INDEX_ROOT, md_root=MD_ROOT)
+  r = CNIndexL2(src_root=SRC_ROOT, out_root=OUT_ROOT)
   r.parse('20260428')                       # 逐指数落盘 (默认, write_together=False)
   r.parse('20260428', write_together=True)  # 全天一张表落盘
-  # 输出 (与股票同目录结构, 指数代码 000xxx/399xxx 不与股票 6/0/3 开头冲突):
-  #   MD_ROOT\single\20260428\SH000001.feather            每个指数全天快照 (write_together=False)
-  #   MD_ROOT\single\20260428\20260428_INDEX.csv          当日指数清单
-  #   MD_ROOT\full\20260428.feather                       全天一张表 (write_together=True)
-  #   MD_ROOT\full\20260428_INDEX.csv                     当日指数清单
-  # 之后取数直接读 feather, 不再碰 parquet。
+  # 输入: src_root\<date>\sh000001.parquet (日期目录下取日期, 一个指数一个 parquet);
+  # 输出: 直接平铺在 out_root\CNIndex\ 下 (两种模式同目录, 不再分 full/single):
+  #   out_root\CNIndex\20260428.feather            全天汇总一张表 (write_together=True)
+  #   out_root\CNIndex\20260428_SH000001.feather   单指数全天快照 (write_together=False, 日期+symbol 命名)
+  #   out_root\CNIndex\20260428.csv                  当日指数清单 (两模式共用)
+  # feather 均为 zstd 压缩; 之后取数直接读 feather, 不再碰 parquet。
 
 字段口径:
   - 指数无十档盘口, 仅 OHLC + last/close + volume/turnover;
@@ -55,7 +55,7 @@ DICT_EXCHANGE = {'sh': ('SSE', 1), 'sz': ('SZSE', 2)}   # 文件名前两位 -> 
 
 # ============================================================== 指数源 parquet 列定义
 # 相当于股票侧的 OB3S: 定义"源"的结构 (read 时校验), 输出结构见 config_schema.INDEX_COLUMN_DTYPE
-# 实测 MD_ROOT\CNIndex 全量 (1127 天) 有三种源 schema (按日期切换):
+# 实测源 CNIndex parquet 全量 (1127 天) 有三种源 schema (按日期切换):
 #   V1 59列: 20220104 ~ 20220330  老版带十档盘口/涨跌停 (实测全 0 无信息量, 丢弃);
 #            无 PreClosePrice/ClosePrice/rdtsc/date, ReceiveTime 是 float64, 多 local_ts
 #   V2 15列: 20220331 ~ 20220630  16 列标准版减 index 列 (cb_time/date int32, Exchange int64, 值口径相同)
@@ -128,16 +128,16 @@ INDEX_SOURCE_COLUMNS = [[x[0] for x in v] for v in (INDEX_SOURCE_V1, INDEX_SOURC
 class CNIndexL2:
     """SSE/SZSE 指数快照解析器: 一个 parquet 一个指数, 逐文件解码落盘。"""
 
-    def __init__(self, index_root: str, md_root: str):
-        self.index_root = index_root       # 源: 日期目录根, 由调用方传入
-        self.md_root = md_root             # 输出根: <md_root>\full\ 或 <md_root>\single\<date>\
+    def __init__(self, src_root: str, out_root: str):
+        self.src_root = src_root       # 输入根: <src_root>\<date>\ 一个指数一个 parquet
+        self.out_root = out_root       # 输出根: 结果平铺在 <out_root>\CNIndex\ 下
 
     # ---------- 解析 ----------
     def parse(self, date: str, write_together: bool = False) -> None:
-        """读取 <date>/ 下全部 parquet -> 解码落盘, 无返回值。
-        当日符号清单 (symbol + day_records) 落盘为 <out_dir>/<date>_INDEX.csv。"""
-        src_dir = join_path(self.index_root, date)
-        out_dir = join_path(self.md_root, 'full') if write_together else join_path(self.md_root, 'single', date)
+        r"""读取 <src_root>\<date>\ 下全部 parquet -> 解码落盘到 <out_root>\CNIndex\, 无返回值。
+        当日符号清单 (symbol + day_records) 落盘为 CNIndex\<date>.csv。"""
+        src_dir = join_path(self.src_root, date)
+        out_dir = join_path(self.out_root, 'CNIndex')
         create_directory(out_dir, last_as_directory=True)
         #
         frames = []                                    # 逐文件解码; 两种落盘模式都先攒全天一张表
@@ -151,12 +151,8 @@ class CNIndexL2:
         #
         df = pd.concat(frames, ignore_index=True)
         symbols = df.groupby('symbol', sort=False).size().rename('day_records').reset_index()
-        if write_together:                             # 全天一张表
-            df.to_feather(join_path(out_dir, f'{date}.feather'), compression='zstd')
-        else:
-            for symbol, g in df.groupby('symbol', sort=False): # 逐指数落盘
-                g.reset_index(drop=True).to_feather(join_path(out_dir, f'{symbol}.feather'), compression='zstd')
-        symbols.to_csv(join_path(out_dir, f'{date}_INDEX.csv'), index=False)
+        df.to_feather(join_path(out_dir, f'{date}.feather'), compression='zstd')
+        symbols.to_csv(join_path(out_dir, f'{date}.csv'), index=False)
         print(f'INDEX {date}: {len(symbols)} symbols, {symbols["day_records"].sum()} records -> {out_dir}', flush=True)
 
     # ---------- 解码 ----------
@@ -248,12 +244,11 @@ class CNIndexL2:
 def _test() -> None:
     """实测: 跑 20260428 一天, 两种落盘模式各一遍, 仅作冒烟测试。
     全量运行见 run_exp/run_read_cnindex.py。"""
-    index_root = r'H:\index\CNIndex'   # 源: 1127 个日期目录 (2022~2026), 每目录 ~550 个 parquet
-    md_root = r'H:\index'              # 输出: <md_root>\full\ 或 <md_root>\single\<date>\
-    r = CNIndexL2(index_root=index_root, md_root=md_root)
+    src_root = r'H:\raw\CNIndex'    # 输入: 1127 个日期目录 (2022~2026), 每目录 ~550 个 parquet (源已于 2026-09-10 删除)
+    out_root = r'H:\processed'      # 输出: H:\processed\CNIndex\ 平铺 (<date>.feather / <date>_<symbol>.feather)
+    r = CNIndexL2(src_root=src_root, out_root=out_root)
     date = '20260428'
     r.parse(date, write_together=True)
-    r.parse(date, write_together=False)
     print(f'--- [_test] {date} OK', flush=True)
 
 

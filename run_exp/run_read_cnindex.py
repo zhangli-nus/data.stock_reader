@@ -11,14 +11,15 @@ run_read_cnindex.py — INDEX 全量运行 (共享内存块池版): 调用 read_
   写进程 x1  : attach 输出块读出压缩字节, 收到一天即写一天 (读写异盘 H/D); 读完的块归还池子
 
 读是硬瓶颈 (HDD 每天 ~550 个小文件随机读 ~12-20s/天), worker 解码 ~4.5s/天 —— 4 个 worker
-足以跟上; writer 收到一天即写一天 (读写异盘: H 盘读源 / D 盘 SSD 写, 无混跑顾虑)。
+足以跟上; writer 收到一天即写一天 (单路大文件顺序写, 不与读小文件抢头)。
 
 为何不用 Queue 直接传: multiprocessing.Queue 底层单管道, 大 payload 全串行挤一根管;
 块池方案下管道只传 KB 级消息, 数据走共享内存零拷贝竞争。
 
 内存上界: (N_IN + N_OUT) x BLK_SIZE + N_WORKERS x ~1.5GB ≈ 3.2 + 6 = 9.2GB (32GB 机器安全)。
-落盘 <out_root>\full\<date>.feather (zstd); 以 <date>_INDEX.csv (最后写出) 为完成标记, 可断点续跑。
-输出 D:\index\full 为唯一产出位置 (早期 H 盘未压缩的 231 天已由用户合并到此, 检查只看 D 盘)。
+输入: SRC_ROOT\<date>\ 逐天取日期 (源 parquet 小文件); 输出: 统一平铺在 OUT_ROOT\CNIndex\ 下
+(与库 read_cnindex_L2 的新 out 布局一致): <date>.feather (zstd) + <date>.csv 完成标记,
+可断点续跑。2026-09-10 全量 1127 天已完成, 产物在 H:\processed\CNIndex; 源 parquet 已删除。
 """
 import io
 import os
@@ -37,8 +38,8 @@ import pyarrow.feather as feather
 from file_io import exist_file, join_path
 from read_cnindex_L2 import CNIndexL2
 
-INDEX_ROOT = r'H:\index\CNIndex'   # 源: 1127 个日期目录 (2022~2026), 每目录 ~550 个 parquet (只读)
-OUT_ROOT = r'D:\index'             # 输出: <OUT_ROOT>\full\<date>.feather (D 盘只写, 唯一产出位置)
+SRC_ROOT = r'H:\raw\CNIndex'       # 输入: 日期目录, 每目录 ~550 个 parquet (与库 _test 一致; 源已于 2026-09-10 删除)
+OUT_ROOT = r'H:\processed'         # 输出: <OUT_ROOT>\CNIndex\<date>.feather 平铺 (与库 out 布局一致)
 N_WORKERS = 4                      # 解码+压缩 worker 数 (读是瓶颈 ~12-20s/天, 4 个已跟得上)
 WRITE_BATCH = 1                    # 写进程攒 N 天一批落盘; 1 = 收到即写 (读写异盘 H 读/D 写, 不混跑)
 BLK_SIZE = 320 * 1024 * 1024       # 共享内存块大小: V1 大天源 ~190MB, zstd 输出 ~100MB, 留余量
@@ -53,7 +54,7 @@ def reader(todo: list, in_blk_q: Queue, in_msg_q: Queue, n_sentinel: int) -> Non
     N_READERS 路并发时各自领 todo 的一个分片, 哨兵共发 N_WORKERS 个 (每路 n_sentinel 个)。"""
     for date in todo:
         items = []
-        day_dir = join_path(INDEX_ROOT, date)
+        day_dir = join_path(SRC_ROOT, date)
         for fn in sorted(os.listdir(day_dir)):
             if fn.endswith('.parquet'):
                 with open(join_path(day_dir, fn), 'rb') as f:
@@ -110,7 +111,7 @@ def worker(in_msg_q: Queue, in_blk_q: Queue, out_blk_q: Queue, out_msg_q: Queue)
 def writer(out_msg_q: Queue, out_blk_q: Queue, n_total: int, t0: float) -> None:
     """单线程批量写: attach 输出块取压缩字节 (零解析), 攒满 WRITE_BATCH 天一批落盘, 读完块归还池子。
     收满 N_WORKERS 个哨兵后写完剩余批次、打印失败汇总再退出。"""
-    out_dir = join_path(OUT_ROOT, 'full')
+    out_dir = join_path(OUT_ROOT, 'CNIndex')
     os.makedirs(out_dir, exist_ok=True)
     batch, done, failed, n_stop = [], 0, [], 0
     while True:
@@ -146,7 +147,7 @@ def _flush(out_dir: str, batch: list, n_total: int, t0: float) -> None:
     for date, fdata, cdata, n_sym, n_rec in batch:
         with open(join_path(out_dir, f'{date}.feather'), 'wb') as f:
             f.write(fdata)
-        with open(join_path(out_dir, f'{date}_INDEX.csv'), 'wb') as f:
+        with open(join_path(out_dir, f'{date}.csv'), 'wb') as f:
             f.write(cdata)
     dates = ', '.join(b[0] for b in batch)
     print(f'  落盘 {len(batch)} 天 [{dates}] 最后 {batch[-1][3]} symbols, {batch[-1][4]} records, '
@@ -154,10 +155,10 @@ def _flush(out_dir: str, batch: list, n_total: int, t0: float) -> None:
 
 
 def main() -> None:
-    days = sorted(d for d in os.listdir(INDEX_ROOT) if d.isdigit())
-    # 跳过检查: D:\index\full\<date>_INDEX.csv (唯一产出位置, 早期 H 盘产物已全部合并到此)
+    days = sorted(d for d in os.listdir(SRC_ROOT) if d.isdigit())
+    # 跳过检查: H:\processed\CNIndex\<date>.csv (唯一产出位置)
     def _done(d: str) -> bool:
-        return exist_file(join_path(OUT_ROOT, 'full', f'{d}_INDEX.csv'))
+        return exist_file(join_path(OUT_ROOT, 'CNIndex', f'{d}.csv'))
     todo = [d for d in days if not _done(d)]
     print(f'--- [INDEX 全量] 共 {len(days)} 天, 待解析 {len(todo)}, 已完成跳过 {len(days) - len(todo)}, '
           f'{N_READERS} 读 + {N_WORKERS} 解码压缩 + 1 批量写(批 {WRITE_BATCH}), 共享内存 {N_IN_BLK}+{N_OUT_BLK} 块 x '

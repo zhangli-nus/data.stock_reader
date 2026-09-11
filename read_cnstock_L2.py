@@ -10,18 +10,19 @@ read_cnstock_L2.py — SSE/SZSE 3 秒十档快照 (OB3S) 解析器
 记录: OB3S 424B, 小端, C 8 字节对齐, 无文件头 offset=0, 每条首 8 字节 = ReceiveTime (epoch 微秒 UTC)。
 
 用法:
-  单天冒烟: python read_cnstock_L2.py (内置 _test, 跑 20251229 SSE 两种落盘模式)
-  或 import (binary_root/md_root 必传, 不在库内硬编码路径):
+  单天冒烟: python read_cnstock_L2.py (内置 _test, 跑 20251229 两个交易所各一遍)
+  或 import (src_root/out_root 必传, 不在库内硬编码路径):
   from read_cnstock_L2 import CNStockL2
-  r = CNStockL2(binary_root=..., md_root=...)
-  r.parse('SSE', '20251229')                        # 逐符号落盘 (默认, write_together=False)
-  r.parse('SSE', '20251229', write_together=True)   # 全天一张表落盘
-  # 输出 (与指数同目录结构):
-  #   md_root\single\20251229\SH600519.feather              每个符号全天 3s 快照 (write_together=False)
-  #   md_root\single\20251229\20251229_SSE.csv   当日符号清单
-  #   md_root\full\20251229.feather                         全天一张表 (write_together=True)
-  #   md_root\full\20251229_SSE.csv               当日符号清单
+  r = CNStockL2(src_root=SRC_ROOT, out_root=OUT_ROOT)
+  r.parse('SSE', '20251229')                        # 全天一张表落盘
+  # 输入: src_root\SSE\*.tar.bz2 / src_root\SZSE\*.tar.bz2 (每所一个源目录);
+  # 输出: 按交易所分两个目录, 各自平铺:
+  #   out_root\SSE\20251229.feather                 全天汇总一张表 (流式逐块写入)
+  #   out_root\SSE\20251229.csv                     当日符号清单 (最后写出 = 完成标记; SZSE 同理)
+  # feather 为 zstd 压缩 (Arrow IPC 文件格式, 逐 RecordBatch 追加写);
   # 之后取数直接读 feather, 不再碰归档。
+  # 流式: 每块 (~100 万条) 解码后立即写盘, 全天 DataFrame 不再常驻 (~1GB 内存/进程);
+  # 中途失败留无 footer 的残废 feather (读不了也无 csv 完成标记), 重跑自动覆盖。
 
 字段口径 (2026-09-10 实测核实):
   - qty = 开盘至今累计成交量, SSE(DZ 源)/SZSE(GJ2 源) 统一为"股" (债券为张/回购为手), 无需缩放
@@ -41,8 +42,11 @@ read_cnstock_L2.py — SSE/SZSE 3 秒十档快照 (OB3S) 解析器
 import subprocess
 
 import os
+import time
 import numpy as np
 import pandas as pd
+import pyarrow as pa
+import pyarrow.ipc as ipc
 
 from file_io import create_directory, join_path
 from config_schema import STOCK_COLUMN
@@ -71,7 +75,7 @@ OB3S = np.dtype([
 assert OB3S.itemsize == 424
 
 
-CHUNK_SIZE = 800_000                                    # 流式单块记录数 (~85 MB/块)
+CHUNK_SIZE = 1_000_000                                    # 流式单块记录数 (424B/条 ~424MB/块)
 DICT_EXCHANGE = {'SSE': ('SH', 1), 'SZSE': ('SZ', 2)}   # 交易所 -> (symbol 前缀, exchange_id)
 ZIP_PREFIX = {'SSE': 'dzsse', 'SZSE': 'gj2szse'}        # 归档名前缀
 
@@ -82,11 +86,11 @@ def _clean_symbol(raw: bytes) -> str:
 
 # ============================================================== 解析器
 class CNStockL2:
-    """SSE/SZSE 3 秒十档快照解析器: 整档解压 (tar 子进程流式) -> 按 symbol 分组 -> 落盘。"""
+    """SSE/SZSE 3 秒十档快照解析器: 整档解压 (tar 子进程流式) -> 逐块解码流式落盘。"""
 
-    def __init__(self, binary_root: str, md_root: str):
-        self.binary_root = binary_root     # 源: <binary_root>\{SSE,SZSE}\*.tar.bz2, 由调用方传入
-        self.md_root = md_root             # 输出根: <md_root>\full\ 或 <md_root>\single\<date>\
+    def __init__(self, src_root: str, out_root: str):
+        self.src_root = src_root     # 输入根: <src_root>\{SSE,SZSE}\*.tar.bz2, 由调用方传入
+        self.out_root = out_root     # 输出根: 按交易所平铺在 <out_root>\{SSE,SZSE}\ 下
 
     # ---------- 解压 ----------
     @staticmethod
@@ -103,24 +107,28 @@ class CNStockL2:
         return ['tar', '-xOf', file_path]
 
     # ---------- 解析 ----------
-    def parse(self, exchange: str, date: str, write_together: bool = False) -> None:
-        """整档解压 -> 分块解码 -> 全天一张表 -> 落盘, 无返回值。
-        当日符号清单 (symbol + day_records) 落盘为 <out_dir>/<date>_<exchange>.csv。
+    def parse(self, exchange: str, date: str) -> None:
+        r"""整档解压 -> 分块解码 -> 流式落盘到 <out_root>\<exchange>\, 无返回值。
+        当日符号清单 (symbol + day_records) 落盘为 <exchange>\<date>.csv (最后写出 = 完成标记)。
 
-        write_together: True  -> 全天一张表存 <md_root>/full/<date>.feather
-                        False -> 逐符号存 <md_root>/single/<date>/<symbol>.feather (默认)
+        流式: 每块 (~100 万条) 解码后立即转 Arrow RecordBatch 追加写进 feather
+        (Arrow IPC 文件格式 + zstd, footer 在收尾时写出), 全天 DataFrame 不再常驻;
+        symbol 计数逐块累加 (口径与整表 groupby 完全一致, 首次出现顺序)。
 
-        内存: 全天解码后的 DataFrame 常驻 (单所约 10GB)。"""
+        内存: ~1.5GB/进程峰值 (单块 424MB 原始字节 + 过滤拷贝 + DataFrame + RecordBatch)。
+        中途失败: 留无 footer 的残废 feather (无 csv 完成标记), 重跑自动覆盖。"""
         exchange = exchange.upper()
-        full_name = join_path(self.binary_root, exchange, f'{ZIP_PREFIX[exchange]}_3s_tick_quote_{date}.tar.bz2')
-        out_dir = join_path(self.md_root, 'full') if write_together else join_path(self.md_root, 'single', date)
+        in_fname = join_path(self.src_root, exchange, f'{ZIP_PREFIX[exchange]}_3s_tick_quote_{date}.tar.bz2')
+        out_dir = join_path(self.out_root, exchange)
         create_directory(out_dir, last_as_directory=True)
         #
-        proc = subprocess.Popen(self._cmd_untar(full_name), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        chunk_bytes = OB3S.itemsize * CHUNK_SIZE     # 每次读 CHUNK_SIZE 条 (~85*4 MB)
+        proc = subprocess.Popen(self._cmd_untar(in_fname), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        chunk_bytes = OB3S.itemsize * CHUNK_SIZE     # 每次读 CHUNK_SIZE 条 (~424 MB/块)
         #
-        frames = []                                  # 每批解码后的 DataFrame
-        n_read = 0
+        sym_counts = {}                              # symbol -> 累计条数 (dict 保首次出现顺序)
+        n_read = 0                                   # 全天有效记录总数
+        writer, schema, fout = None, None, None      # IPC 文件写入器 (首块定 schema 懒建)
+        feather_path = join_path(out_dir, f'{date}.feather')
         try:
             while True:
                 chunk = proc.stdout.read(chunk_bytes)
@@ -134,23 +142,32 @@ class CNStockL2:
                 if not len(arr):                     # 全部过滤掉的就直接继续下一步读取
                     continue
                 n_read += len(arr)
-                frames.append(self._decode(arr, exchange, date))
+                df = self._decode(arr, exchange, date)
+                for s, c in df['symbol'].value_counts().items():   # 逐块累加, 替代整表 groupby
+                    sym_counts[s] = sym_counts.get(s, 0) + c
+                batch = pa.RecordBatch.from_pandas(df, schema=schema, preserve_index=False)
+                if writer is None:                   # 首块: 建 IPC 文件写入器 (feather v2 底层格式)
+                    schema = batch.schema
+                    fout = open(feather_path, 'wb')
+                    writer = ipc.new_file(fout, schema, options=ipc.IpcWriteOptions(compression='zstd'))
+                writer.write_batch(batch)            # 本块立即写盘, 内存随即可回收
                 print(f'  {n_read:>12,} 条已解码', flush=True)
         finally:
+            if writer is not None:
+                writer.close()                       # footer 在此写出, 文件才可读
+            if fout is not None:
+                fout.close()
             proc.stdout.close()
             proc.wait()
             if proc.returncode != 0:                 # parse 总是读尽全流, 直接检查退出码
-                raise RuntimeError(f'解压失败 {full_name}')
+                raise RuntimeError(f'解压失败 {in_fname}')
+        if n_read == 0:
+            raise RuntimeError(f'{exchange} {date} 全天无有效记录')
 
-        # 全天拼成一张表, 按 symbol 归拢 (组内保持原时间顺序), 落盘
-        df = pd.concat(frames, ignore_index=True)
-        symbols = df.groupby('symbol', sort=False).size().rename('day_records').reset_index()
-        if write_together:                           # 全天一张表
-            df.to_feather(join_path(out_dir, f'{date}.feather'), compression='zstd')
-        else:                                        # 逐符号一个文件
-            for s, g in df.groupby('symbol', sort=False):
-                g.reset_index(drop=True).to_feather(join_path(out_dir, f'{s}.feather'), compression='zstd')
-        symbols.to_csv(join_path(out_dir, f'{date}_{exchange}.csv'), index=False)
+        # 符号清单 (口径与整表 groupby('symbol', sort=False) 一致: 首次出现顺序 + day_records)
+        symbols = pd.DataFrame({'symbol': list(sym_counts.keys()),
+                                'day_records': [sym_counts[s] for s in sym_counts]})
+        symbols.to_csv(join_path(out_dir, f'{date}.csv'), index=False)
         print(f'{exchange} {date}: {len(symbols)} symbols, {symbols["day_records"].sum()} records -> {out_dir}', flush=True)
 
     # ---------- 解码 ----------
@@ -193,12 +210,14 @@ class CNStockL2:
 
 # ============================================================== 实测: python read_cnstock_L2.py
 def _test() -> None:
-    """实测: 跑 20251229 SSE 一天, 两种落盘模式各一遍, 仅作冒烟测试。"""
+    """实测: 跑 20251229 两个交易所各一遍, 逐次计时。"""
     base = os.path.dirname(os.path.abspath(__file__))
-    r = CNStockL2(binary_root=join_path(base, 'data/raw_data'), md_root=join_path(base, 'data/md'))
-    exchange, date = 'SSE', '20251229'
-    r.parse(exchange, date, write_together=True)
-    r.parse(exchange, date, write_together=False)
+    r = CNStockL2(src_root=join_path(base, 'data/raw'), out_root=join_path(base, 'data/processed'))
+    date = '20251229'
+    for exchange in ('SSE', 'SZSE'):
+        t0 = time.perf_counter()
+        r.parse(exchange, date)
+        print(f'--- [_test]  {exchange} 耗时 {time.perf_counter() - t0:.1f}s', flush=True)
     print(f'--- [_test] {exchange} {date} OK', flush=True)
 
 
