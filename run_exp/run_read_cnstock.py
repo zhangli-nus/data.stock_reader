@@ -3,12 +3,12 @@
 r"""
 run_read_cnstock.py — CNStock 流水线 (worker / writer): 调用 read_cnstock_L2, 不改库逻辑。
 
-场景: 2026 年归档已全部在 H:\raw\SSE\ (H 盘只剩读, 无下载写入/无输出写入), 无需盯盘也无需中转缓存。
-盘序: H 盘 HDD 只被 worker 的 tar 流式读触碰 (解压限速后每路 ~4.5MB/s, 6 路合计 ~27MB/s, 远低于
-HDD 顺序读能力, 磁盘 90% 时间空闲); D 盘 SSD 写产物 (feather/csv), 两盘彻底错开。
+场景: 2026 年归档已全部在 H:\raw\<EXCHANGES>\ (无下载写入, 无需盯盘也无需中转缓存)。
+盘序: H 盘 HDD 只被 worker 的 tar 流式读触碰 (解压限速后每路 ~4.5MB/s, 远低于 HDD 顺序读
+能力); D 盘 SSD 写产物 (feather/csv), 两盘彻底错开。跑完全部后由用户统一拷贝回 H 盘。
 
-  主进程 : 启动时一次性扫描 H:\raw\SSE 建任务清单 (跳过 succsse.txt 账本已有的天, 按日期升序),
-           全部任务立刻入队 —— 4 个 worker 马上各自开流进入流水线 (预读即任务前置, 无空窗)。
+  主进程 : 启动时一次性扫描 H:\raw\<EXCHANGES> 建任务清单 (跳过 succsse.txt 账本已有的天, 按日期升序),
+           全部任务立刻入队 —— N 个 worker 马上各自开流进入流水线 (预读即任务前置, 无空窗)。
   worker x N : 取任务 -> 直接调库 CNStockL2.parse (src_root=H:\raw, 库内流式:
            tar 解压 -> 逐块解码 -> Arrow RecordBatch 追加写 feather (zstd) -> csv 到 D:\processed)。
            bz2 解压是单核 CPU 密集 (~6-7 分钟/档), N 个 worker = N 路并行解压。
@@ -22,7 +22,7 @@ worker 失败的天不写 csv, 重启自动重试 (仍不在账本); 中途强�
 
 内存上界: N_WORKERS x ~1.5GB 峰值 (单块 424MB + 过滤拷贝 + DataFrame + RecordBatch) ≈ 9GB, 32GB 机器宽裕。
 
-当前只跑 SSE (EXCHANGES 只含 SSE; SZSE 的归档下不动, 待后续指令)。
+当前只跑 SZSE (EXCHANGES 只含 SZSE; SSE 已收官, 归档保留不动)。
 """
 import os
 import re
@@ -38,12 +38,12 @@ from file_io import join_path
 from read_cnstock_L2 import CNStockL2
 
 RAW_ROOT = r'H:\raw'               # 源: H 盘 HDD, <RAW_ROOT>\SSE\*_3s_tick_quote_<date>.tar.bz2 (只读不删)
-OUT_ROOT = r'D:\processed'         # 输出: <OUT_ROOT>\SSE\<date>.feather + <date>.csv (D 盘写)
+OUT_ROOT = r'D:\processed'         # 输出: <OUT_ROOT>\SZSE\<date>.feather + <date>.csv (D 盘写, 跑完由用户拷回 H)
 FAIL_TXT = r'H:\raw\fail.txt'      # 失败记录 (追加: 时间 \t 交易所 \t 文件名 \t 错误; 源文件保留不删)
 SUCC_TXT = r'H:\raw\succsse.txt'   # 成功记录 (追加: 时间 \t 交易所 \t 日期 \t symbols \t records)
-EXCHANGES = ('SSE',)               # 先只跑 SSE; SZSE 归档暂不下动, 待后续指令
-N_WORKERS = 6                      # worker 数 = 并行解压路数 (bz2 单核密集; 无下载后 H 盘只读,
-                                   # 6 路 ~27MB/s 仍在 HDD 能力内, 16 核富余; 用户白天轻用机器)
+EXCHANGES = ('SZSE',)              # 本轮跑 SZSE; SSE 已收官 (账本全覆盖), 归档保留
+N_WORKERS = 4                      # worker 数 = 并行解压路数 (bz2 单核密集; 实测 8 路挤满 16 核
+                                   # 互相抢核总吞吐反降 ~25%, 4 路更优; H 盘只读 D 盘只写)
 
 
 # ============================================================== 任务清单
